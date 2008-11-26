@@ -1,0 +1,66 @@
+05/06/2008 - Francesco Santanastasio
+
+1) Edit samples.txt: create list of dataset with the format 
+
+(datasetName from DBS)                                 (number of events from DBS)
+
+/WenuJets_Pt_0_15/CMSSW_1_6_7-CSA07-1192837492/RECO    15000
+/WenuJets_Pt_15_20/CMSSW_1_6_7-CSA07-1192837647/RECO   26300
+/WenuJets_Pt_20_30/CMSSW_1_6_7-CSA07-1192837803/RECO   55000
+/WenuJets_Pt_30_50/CMSSW_1_6_7-CSA07-1192838114/RECO   55000
+........
+........
+
+2) edit prepare_crab.py (or prepare_crab_castor.py to store output on 
+CASTOR)
+
+## root dir for output and log
+rootdir =  "/u1/santanas/Leptoquark/LQRootNtupleTest"
+
+> mkdir /u1/santanas/Leptoquark/LQRootNtupleTest
+
+(use a generic name for the directory, e.g. Soups, Signal. 
+Infact the script will create into it one directory for each 
+datasetName in the samples.txt list)
+
+P.S. when you create the directory on CASTOR castorDir you need to do 
+rfchmod +775 castorDir
+to make it writable by every user
+
+3) edit template_rtuple.cfg
+
+> cp YourCfg.cfg template_rtuple.cfg
+
+where YourCfg.cfg is the cfg that you use interactively (as it is).
+
+Edit it as you wish.
+
+4) edit template_crab_rtuple.cfg or template_crab_rtuple_castor.cfg 
+(facultative)
+
+e.g. 
+scheduler = xxx
+events_per_job = xxx
+ce_black_list = xxx
+....
+....
+
+5) Create cfgfiles
+
+> ./prepare_crab.py samples.txt
+
+6) Create and submit jobs
+
+> eval `scramv1 runtime -csh`
+> perl create_submit.pl
+
+Check if all jobs have been submitted
+
+7) Retrieve jobs
+
+For the moment use the standard CRAB commands by hand. 
+Maybe in future we will write a script to do it automatically.
+Note that if you use the "castor" scripts the file will be saved automatically 
+to CASTOR at the end of the job and you don't need to make "-getoutput" 
+(unless if you want to check the logs).
+If a job fail (you will see from "crab -status") you can resubmit it.

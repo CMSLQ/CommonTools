@@ -1,0 +1,63 @@
+****************************************
+** Simple code to plot electron       **
+** isolation and ID variaibles        **
+****************************************
+
+##### using main_ele_isolation_ID.cc ####
+
+
+############
+TO BE IMPROVED
+
+1) Edit Selection.h and Selection.cc (needed each time you use a new root tree)
+
+take a template of rootfile (file.root) that you want to analyze
+ (the Tree Name is "treename").
+> root -l file.root
+> treename.MakeClass("test") 
+
+test.C and test.h will be created.
+
+Edit Selection.cc and Selection.h accordingly to what present in test.h .
+Remove then test.C and test.h
+############
+
+2) Compile the code  
+
+> make main_ele_isolation_ID
+
+3) Create the list with roofiles
+
+chowder.txt, gumbo.txt and LQ1stgenM250_fast169_100pbScenario.txt
+are 3 examples of list of rootfiles for different samples.
+You must create your own list each time. 
+
+(only gumbo and LQ really needed.)
+
+4) Run the code
+
+> ./launchAll_EleIsoID.csh
+
+P.S. the correct usage of main_finalSelection.cc is
+--- Correct Usage : exe eventProcess inputlist treename outputfilename
+--- Correct Usage : eventProcess can be: all, ttbarjet, wjet, zjet, qcdjet, gammajet, leptoquark
+
+The output files will be:
+
+EleIsoID_fakeEle_QCD.root
+EleIsoID_trueEle_LQ.root
+
+which contain the output of the analysis
+
+5) make final plots 
+
+Edit PlotEleIsoID.C, for instance specifying which are the input root files 
+for real and fake electron samples.
+
+It plots all the electron isolation and ID variables for reco electrons matched with 
+gen electrons from LQ decay, and for fake electrons from a sample of QCD jet events in the gumbo soup.
+
+> root -l 
+> .x PlotEleIsoID.C
+
+Some (7) ".gif" plots are saved.

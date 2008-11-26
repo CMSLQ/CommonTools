@@ -1,0 +1,1 @@
+/home/santanas/Data/Leptoquarks/RootNtuples/Leptoquarks_1stgen/LQ1stgenM250_fast169_100pbScenario.root

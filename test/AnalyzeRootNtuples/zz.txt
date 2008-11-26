@@ -1,0 +1,8 @@
+/home/santanas/Data/Leptoquarks/RootNtuples/ZZ_incl-CMSSW_1_6_12-CSA07-100pb-skimElectron/rtuple_ZZ_incl_CMSSW_1_6_7-CSA07-1194964234_1.root
+/home/santanas/Data/Leptoquarks/RootNtuples/ZZ_incl-CMSSW_1_6_12-CSA07-100pb-skimElectron/rtuple_ZZ_incl_CMSSW_1_6_7-CSA07-1194964234_2.root
+/home/santanas/Data/Leptoquarks/RootNtuples/ZZ_incl-CMSSW_1_6_12-CSA07-100pb-skimElectron/rtuple_ZZ_incl_CMSSW_1_6_7-CSA07-1194964234_3.root
+/home/santanas/Data/Leptoquarks/RootNtuples/ZZ_incl-CMSSW_1_6_12-CSA07-100pb-skimElectron/rtuple_ZZ_incl_CMSSW_1_6_7-CSA07-1194964234_4.root
+/home/santanas/Data/Leptoquarks/RootNtuples/ZZ_incl-CMSSW_1_6_12-CSA07-100pb-skimElectron/rtuple_ZZ_incl_CMSSW_1_6_7-CSA07-1194964234_5.root
+/home/santanas/Data/Leptoquarks/RootNtuples/ZZ_incl-CMSSW_1_6_12-CSA07-100pb-skimElectron/rtuple_ZZ_incl_CMSSW_1_6_7-CSA07-1194964234_6.root
+/home/santanas/Data/Leptoquarks/RootNtuples/ZZ_incl-CMSSW_1_6_12-CSA07-100pb-skimElectron/rtuple_ZZ_incl_CMSSW_1_6_7-CSA07-1194964234_7.root
+/home/santanas/Data/Leptoquarks/RootNtuples/ZZ_incl-CMSSW_1_6_12-CSA07-100pb-skimElectron/rtuple_ZZ_incl_CMSSW_1_6_7-CSA07-1194964234_8.root

@@ -1,0 +1,15 @@
+## general tools
+
+comparison.C : root macro which compares two distributions making ratio
+stage_in.pl : shell script to prestage files on castor 
+prestage.sh : perl script to prestage files on castor
+copyFromCastor.pl : copy from Castor :)
+
+
+## tools for analysis in CMSSW_1_6_x
+
+AnalyzeRootNtuples
+LLFit_and_Significance
+efficiency.C , plotEff.C : plots used for electron efficiency
+submitWithCrab : script to make automatic submission with crab of several datasets
+(to be adapted..)

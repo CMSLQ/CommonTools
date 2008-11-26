@@ -1,0 +1,67 @@
+****************************************
+** Simple code to analyze RootNtuples **
+****************************************
+
+##### using main_finalSelection.cc ####
+
+
+############
+TO BE IMPROVED
+
+1) Edit Selection.h and Selection.cc (needed each time you use a new root tree)
+
+take a template of rootfile (file.root) that you want to analyze
+ (the Tree Name is "treename").
+> root -l file.root
+> treename.MakeClass("test") 
+
+test.C and test.h will be created.
+
+Edit Selection.cc and Selection.h accordingly to what present in test.h .
+Remove then test.C and test.h
+############
+
+2) Compile the code  
+
+> make main_finalSelection
+
+3) Create the list with roofiles
+
+chowder.txt, gumbo.txt and LQ1stgenM250_fast169_100pbScenario.txt
+are 3 examples of list of rootfiles for different samples.
+You must create your own list each time. 
+
+4) Run the code
+
+> ./launchAll.csh
+
+P.S. the correct usage of main_finalSelection.cc is
+--- Correct Usage : exe eventProcess inputlist treename outputfilename
+--- Correct Usage : eventProcess can be: all, ttbarjet, wjet, zjet, qcdjet, gammajet, leptoquark, ww, wz, zz
+
+The output files will be:
+
+lq1stgen_M250_fast169_100pb.root
+ttbar.root
+zjet.root
+wjet.root
+qcdjet.root
+gammajet.root
+ww.root
+wz.root
+zz.root
+
+which contain the output of the analysis
+
+5) make final plots 
+
+Edit PlotSigBkgVariables.C specifying which are the input root files for different processes.
+
+It plots all signal and background in the same THStack adding legend and variuos labels.
+
+> root -l 
+> .L PlotSigBkgVariables.C
+> PlotSigBkgVariable("h_Mej_best_Meecut_Stcut","Mej_best_Meecut_Stcut.gif","Mej (GeV)","Number of events / 100 pb-1",0.1,300,0,1000,2,1)
+> PlotSigBkgVariable("h_Mee","Mee.gif","Mee (GeV)","Number of events / 100 pb-1",0.1,300,0,1000,5,1)
+> PlotSigBkgVariable("h_St","St.gif","St (GeV)","Number of events / 100 pb-1",0.1,300,0,2000,4,1)
+(you can do it for the histogram that you want)

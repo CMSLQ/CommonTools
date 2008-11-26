@@ -1,0 +1,1 @@
+/CSA07Electron/CMSSW_1_6_7-CSA07-Gumbo-B1-PDElectron-ReReco-100pb-Skims7-susyHLTElectronPhoton/USER 1985110

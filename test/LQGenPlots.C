@@ -1,7 +1,7 @@
 {
 
-//TFile f("data/output/genStudies_LQ1stgen_M250.root");
-TFile f("data/output/genStudies_LQ1stgen_M400.root");
+TFile f("../data/output/genStudies_LQ1stgen_M250.root");
+//TFile f("../data/output/genStudies_LQ1stgen_M400.root");
 
 f.ls();
 
@@ -191,5 +191,33 @@ legend7->AddEntry(h_LQmassAlgo_With3Jets,"using 2ele/3jets + minimum \\DeltaM","
 legend7->AddEntry(h_LQmassAlgo2_With3Jets,"using 2ele/3jets + minimum \\DeltaM_{rel}","l");
 legend7->Draw();
 
+//###########################################################################
+
+TCanvas c8;
+//c8.SetLogy();
+
+//rebinning of h_LQmassAlgo2_With3Jets already done above
+h_LQmassAlgo2_With3JetsJet1In->Rebin(2);
+
+h_LQmassAlgo2_With3Jets->SetTitle("");
+
+h_LQmassAlgo2_With3Jets->GetXaxis()->SetTitle("M_{ej} (GeV)");
+h_LQmassAlgo2_With3Jets->GetXaxis()->SetRangeUser(0,1000);
+h_LQmassAlgo2_With3Jets->SetLineWidth(2);
+
+h_LQmassAlgo2_With3Jets->SetLineColor(kBlack);
+h_LQmassAlgo2_With3Jets->SetLineWidth(2);
+
+h_LQmassAlgo2_With3JetsJet1In->SetLineColor(kRed);
+h_LQmassAlgo2_With3JetsJet1In->SetLineWidth(2);
+
+h_LQmassAlgo2_With3Jets->Draw();
+h_LQmassAlgo2_With3JetsJet1In->DrawClone("same");
+
+TLegend *legend8 = new TLegend(0.381,0.704,0.874,0.862);
+legend8->SetFillColor(kWhite);
+legend8->AddEntry(h_LQmassAlgo2_With3Jets,"using 2ele/3jets + minimum \\DeltaM","l");
+legend8->AddEntry(h_LQmassAlgo2_With3JetsJet1In,"using 2ele/3jets + minimum \\DeltaM_{rel} + j0 always present","l");
+legend8->Draw();
 
 }

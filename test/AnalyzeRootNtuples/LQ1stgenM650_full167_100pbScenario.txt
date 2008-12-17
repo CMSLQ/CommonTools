@@ -1,1 +1,0 @@
-/home/santanas/Data/Leptoquarks/RootNtuples/Leptoquarks_1stgen/LQ1stgenM650_full167_100pbScenario.root

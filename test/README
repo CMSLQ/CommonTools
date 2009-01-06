@@ -1,6 +1,8 @@
 ## general tools
 
 comparison.C : root macro which compares two distributions making ratio
+Compare2files.C : adaptation of comparison.C to compare electron ID and ISO var from 
+                  signal and bckgrnd (with cuts marked)
 stage_in.pl : shell script to prestage files on castor 
 prestage.sh : perl script to prestage files on castor
 copyFromCastor.pl : copy from Castor :)
@@ -13,3 +15,8 @@ LLFit_and_Significance
 efficiency.C , plotEff.C : plots used for electron efficiency
 submitWithCrab : script to make automatic submission with crab of several datasets
 (to be adapted..)
+
+## tools used in CMSSW_2_1_8
+
+elecRecoEff.C : plots electron reconstruction eff with no cuts, ID only and ID+ISO
+plotElecEff.C : adaptation of plotEff.C to run with elecRecoEff.C 

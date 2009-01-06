@@ -113,7 +113,7 @@ void drawcompare2(char* namehisto1, char* namehisto2, char* namehisto3, char* na
 //   cout << endl;
 
 
-  canv->Print("eleIdIso.ps"); 
+  canv->Print("compare2files.ps"); 
   //canv->Print("comparison.gif"); 
 }
 

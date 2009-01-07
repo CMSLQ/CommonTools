@@ -18,31 +18,60 @@ the infile)
   int Xmin=-3;
   int Xmax =3;
 
-  eff->SetMarkerSize(0.5);
-  eff->SetMarkerStyle(20);
-  eff->SetMarkerColor(kBlack);
-  eff->GetXaxis()->SetRangeUser(Xmin,Xmax);
-  eff->Draw("histep");
+  eff_Eta->SetMarkerSize(0.5);
+  eff_Eta->SetMarkerStyle(20);
+  eff_Eta->SetMarkerColor(kBlack);
+  eff_Eta->GetXaxis()->SetRangeUser(Xmin,Xmax);
+  eff_Eta->Draw("histep");
 
-  eff->GetYaxis()->SetTitle("efficiency");
+  eff_Eta->GetYaxis()->SetTitle("efficiency");
 
-  eff_ID->SetMarkerSize(0.5);
-  eff_ID->SetMarkerStyle(2);
-  eff_ID->SetMarkerColor(kBlue);
-  eff_ID->Draw("samehistep");  
+  eff_ID_Eta->SetMarkerSize(0.5);
+  eff_ID_Eta->SetMarkerStyle(2);
+  eff_ID_Eta->SetMarkerColor(kBlue);
+  eff_ID_Eta->Draw("samehistep");  
 
-  eff_ID_ISO->SetMarkerSize(0.5);
-  eff_ID_ISO->SetMarkerStyle(4);
-  eff_ID_ISO->SetMarkerColor(kRed);
-  eff_ID_ISO->Draw("samehistep");  
+  eff_ID_ISO_Eta->SetMarkerSize(0.5);
+  eff_ID_ISO_Eta->SetMarkerStyle(4);
+  eff_ID_ISO_Eta->SetMarkerColor(kRed);
+  eff_ID_ISO_Eta->Draw("samehistep");  
+  TLegend *legend = new TLegend(0.614322,0.615385,0.874372,0.868881);
+  TLegend *legend = new TLegend(0.75,0.75,0.874372,0.868881);
+  legend->SetFillColor(kWhite);
+  legend->AddEntry(eff_Eta,"gsf ele - no cut","p");
+  legend->AddEntry(eff_ID_Eta,"gsf ele - ID cuts","p");
+  legend->AddEntry(eff_ID_ISO_Eta,"gsf ele - ID+ISO cuts","p");
+  legend->Draw();
+
+  TCanvas c2;
+  c2->SetGridy();
+
+  eff_Pt->SetMarkerSize(0.5);
+  eff_Pt->SetMarkerStyle(20);
+  eff_Pt->SetMarkerColor(kBlack);
+  eff_Pt->Draw("histep");
+
+  eff_Pt->GetYaxis()->SetTitle("efficiency");
+
+  eff_ID_Pt->SetMarkerSize(0.5);
+  eff_ID_Pt->SetMarkerStyle(2);
+  eff_ID_Pt->SetMarkerColor(kBlue);
+  eff_ID_Pt->Draw("samehistep");  
+
+  eff_ID_ISO_Pt->SetMarkerSize(0.5);
+  eff_ID_ISO_Pt->SetMarkerStyle(4);
+  eff_ID_ISO_Pt->SetMarkerColor(kRed);
+  eff_ID_ISO_Pt->Draw("samehistep");  
 
   TLegend *legend = new TLegend(0.614322,0.615385,0.874372,0.868881);
   TLegend *legend = new TLegend(0.75,0.75,0.874372,0.868881);
   legend->SetFillColor(kWhite);
-  legend->AddEntry(eff,"gsf ele - no cut","p");
-  legend->AddEntry(eff_ID,"gsf ele - ID cuts","p");
-  legend->AddEntry(eff_ID_ISO,"gsf ele - ID+ISO cuts","p");
+  legend->AddEntry(eff_Pt,"gsf ele - no cut","p");
+  legend->AddEntry(eff_ID_Pt,"gsf ele - ID cuts","p");
+  legend->AddEntry(eff_ID_ISO_Pt,"gsf ele - ID+ISO cuts","p");
   legend->Draw();
+
+
 
   //regions out of fiducial region
 

@@ -115,7 +115,7 @@ void efficiency()
   PlotEfficiency("HEEPv1_2cuts.root", 
 		 "ele_Eta_Gen_matched", 
 		 "ele_Eta_Gen",
-		 "eff",
+		 "eff_Eta",
                  "\\eta",1, 
 		 outputfile);
 
@@ -123,7 +123,7 @@ void efficiency()
   PlotEfficiency("HEEPv1_2cuts.root", 
 		 "ele_Eta_Gen_matched_ID", 
 		 "ele_Eta_Gen",
-		 "eff_ID",
+		 "eff_ID_Eta",
                  "\\eta",1, 
 		 outputfile);
 
@@ -131,7 +131,31 @@ void efficiency()
   PlotEfficiency("HEEPv1_2cuts.root", 
 		 "ele_Eta_Gen_matched_ID_ISO", 
 		 "ele_Eta_Gen",
-		 "eff_ID_ISO",
+		 "eff_ID_ISO_Eta",
                  "\\eta",1, 
 		 outputfile);
+
+  PlotEfficiency("HEEPv1_2cuts.root", 
+		 "ele_Pt_Gen_matched", 
+		 "ele_Pt_Gen",
+		 "eff_Pt",
+                 "pT",1, 
+		 outputfile);
+
+
+  PlotEfficiency("HEEPv1_2cuts.root", 
+		 "ele_Pt_Gen_matched_ID", 
+		 "ele_Pt_Gen",
+		 "eff_ID_Pt",
+                 "pT",1, 
+		 outputfile);
+
+
+  PlotEfficiency("HEEPv1_2cuts.root", 
+		 "ele_Pt_Gen_matched_ID_ISO", 
+		 "ele_Pt_Gen",
+		 "eff_ID_ISO_Pt",
+                 "pT",1, 
+		 outputfile);
+
 }

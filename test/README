@@ -20,3 +20,4 @@ submitWithCrab : script to make automatic submission with crab of several datase
 
 elecRecoEff.C : plots electron reconstruction eff with no cuts, ID only and ID+ISO
 plotElecEff.C : adaptation of plotEff.C to run with elecRecoEff.C 
+LQGenPlots : plots at gen level

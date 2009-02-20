@@ -21,3 +21,6 @@ submitWithCrab : script to make automatic submission with crab of several datase
 elecRecoEff.C : plots electron reconstruction eff with no cuts, ID only and ID+ISO
 plotElecEff.C : adaptation of plotEff.C to run with elecRecoEff.C 
 LQGenPlots : plots at gen level
+ele_muon_effAndRatio.C: plot electron and muon efficiencies as output from /rootNtu
+pleMacros/src/analysisClass_elecStudies2.C and /rootNtu
+pleMacros/src/analysisClass_muonStudies2.C and calculate ratio eff_e/eff_mu for ttbar background estimate

@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+##############################################################################
+## DONT'T MODIFY WITHIN "# %%%%%%% BEGIN %%%%%%%"  and "# %%%%%%% END %%%%%%%"
+##############################################################################
+
 #---Import
 import sys
 import string
@@ -20,20 +24,31 @@ gStyle.SetPadTickX(1);
 gStyle.SetPadTickY(1);
 #--- TODO: WHY IT DOES NOT LOAD THE DEFAULT ROOTLOGON.C ? ---#
 
+
 #--- Root files
+
+# %%%%%%% BEGIN %%%%%%%
+def GetFile(filename):
+    file = TFile(filename)
+    if( not file):
+        print "ERROR: file " + filename + " not found"
+        print "exiting..."
+        sys.exit()
+    return file
+# %%%%%%% END %%%%%%%
+
 #output from /rootNtupleMacros/src/analysisClass_elecStudies2.C
-name_File1 = "eleEffLQUE250.root"
-File1 = TFile(name_File1)
-
+#File1 = GetFile("eleEffLQUE250.root")
+File1 = GetFile("eleEffZJet_new2.root")
 #output from /rootNtupleMacros/src/analysisClass_muonStudies2.C
-name_File2 = "muonEffLQCMu250.root"
-File2 = TFile(name_File2)
-
+#File1 = GetFile("muonEffLQUE250.root")
+File2 = GetFile("muonEffZJet_new2.root")
+#this rootfile contains the histogram/s to rescale with the ratio of efficiency
+File3 = GetFile("analysisClass_emujjSample_plots.root")
 
 #--- Define functions
-## DONT'T MODIFY WITHIN "# %%%%%%% BEGIN %%%%%%%"  and "# %%%%%%% END %%%%%%% "
 
-# %%%%%%% BEGIN %%%%%%% 
+# %%%%%%% BEGIN %%%%%%%     
 
 def GetHisto( histoName , file ):
     histo = file.Get( histoName )
@@ -73,26 +88,10 @@ def GetEffFixBinning( num , den , m_size , m_style , m_color , xtitle , ytitle ,
 
 
 
-def GetEffVarBinning( num , den , m_size , m_style , m_color , xtitle , ytitle , min , max,
-                      Nbin1, step1, Nbin2, step2, Nbin3, step3):
+def GetEffVarBinning( num , den , m_size , m_style , m_color , xtitle , ytitle , min , max, Bins):
 
-    #--- adjustment for variable binning
-    lastBin1 = step1*(Nbin1)
-    lastBin2 = step1*(Nbin1) + step2*(Nbin2)
-    lastBin3 = step1*(Nbin1) + step2*(Nbin2) + step3*(Nbin3)
-    NbinTot = Nbin1 + Nbin2 + Nbin3;
-    Bins = []
-
-    for bin in range( 0 , Nbin1 ):
-        Bins.append(step1 * ( bin - (-1) ) )
-
-    for bin in range( Nbin1 , Nbin2 + Nbin1 ):
-        Bins.append(Bins[ Nbin1 - 1 ] + step2 * ( bin - ( Nbin1 - 1 ) ) )
-
-    for bin in range( Nbin2 + Nbin1 , Nbin3 + Nbin2 + Nbin1 ):
-        Bins.append(Bins[ Nbin2 + Nbin1 - 1 ] + step3 * ( bin - ( Nbin2 + Nbin1 - 1 ) ) )
-
-    #print Bins
+    NbinTot = len(Bins) 
+    print Bins
     BinsFinal = array( 'f', Bins ) 
 
     num_varBin = TH1F("num_varBin",
@@ -174,8 +173,8 @@ def GetRatioEff( num , den , m_size , m_style , m_color , xtitle , ytitle ):
         
         if( y2 == 0 or y1==0 ):
             ratio.SetPoint(npoint,x1, 0)
-            ratio.SetPointEXhigh(npoint, 0)
-            ratio.SetPointEXlow(npoint, 0)
+            ratio.SetPointEXhigh(npoint, ehx1)
+            ratio.SetPointEXlow(npoint, elx1)
             ratio.SetPointEYhigh(npoint, 0)
             ratio.SetPointEYlow(npoint, 0)
         else:
@@ -206,33 +205,111 @@ def GetRatioEff( num , den , m_size , m_style , m_color , xtitle , ytitle ):
     return ratio
 
 
+def GetHistoRescaled( histo , function ):
+
+    Bins = []
+    BinsContent = []
+    BinsContentErrMax = []
+    for point in range( 0 , function.GetN() ):
+        x, y = ROOT.Double(1), ROOT.Double(1)
+        function.GetPoint(point, x, y)
+        ehx = function.GetErrorXhigh(point)  
+        elx = function.GetErrorXlow(point)
+        ehy = function.GetErrorYhigh(point)
+        ely = function.GetErrorYlow(point)  
+        up = x + ehx
+        low = x - elx
+        if(point == 0):
+            Bins.append( low )
+        Bins.append( up )
+        BinsContent.append( y )
+        BinsContentErrMax.append( max(ehy,ely) )
+
+    BinsFinal = array( 'f', Bins ) 
+
+    ##define the tmp-histo
+    histoFinal = TH1F("histoFinal",
+                      histo.GetName()+"_rescaled",
+                      len(Bins) - 1 , BinsFinal )
+    histoFinal.Sumw2()
+
+    ##fill the tmp-histo with the content of the histo passed as argument to the function
+    for bin1 in range( 1 , histoFinal.GetNbinsX()+1 ):
+        center = histoFinal.GetBinCenter(bin1)
+        halfwidth = histoFinal.GetBinWidth(bin1) / 2
+        #print center
+        #print halfwidth
+        newValue = 0
+        newErr = 0
+        for bin2 in range( 1 , histo.GetNbinsX()+1 ):
+            if(histo.GetBinCenter(bin2) > (center - halfwidth)
+               and
+               histo.GetBinCenter(bin2) < (center + halfwidth) ):
+                newValue = newValue + histo.GetBinContent(bin2)
+                newErr = newErr + histo.GetBinError(bin2)*histo.GetBinError(bin2)
+
+        histoFinal.SetBinContent(bin1,newValue)
+        histoFinal.SetBinError(bin1,sqrt(newErr))
+
+#    for bin in range( 1 , histo.GetNbinsX()+1 ):
+#        for entry in range( 0 , int(histo.GetBinContent(bin)) ):
+#            histoFinal.SetBinContent( histo.GetBinCenter(bin) , float(histo.GetBinContent(bin) )
+
+    ##rescale tmp-histo with the function
+    for index, rescaleFactor in enumerate( BinsContent ):
+        #print index
+        #print "histoFinal.GetBinContent(index+1): " + str(histoFinal.GetBinContent(index+1))
+        #print "histoFinal.GetBinError(index+1): " + str(histoFinal.GetBinError(index+1))
+        #print "rescaleFactor: " + str(rescaleFactor)
+        #print "BinsContentErrMax[index]: " + str(BinsContentErrMax[index])
+        rescaledBinContent = rescaleFactor * histoFinal.GetBinContent(index+1)
+        if( histoFinal.GetBinContent(index+1) >0 and rescaleFactor >0 ):
+            erelh = histoFinal.GetBinError(index+1) / histoFinal.GetBinContent(index+1)
+            erelf = BinsContentErrMax[index] / rescaleFactor
+            erelhfin = sqrt(erelh*erelh + erelf*erelf)
+            rescaledBinError = erelhfin * rescaledBinContent
+            #print "rescaledBinContent: " + str(rescaledBinContent)
+            #print "rescaledBinError: " + str(rescaledBinError)
+            histoFinal.SetBinContent(index+1 , rescaledBinContent )
+            histoFinal.SetBinError(index+1 , rescaledBinError )
+        else:
+            histoFinal.SetBinContent(index+1 , 0 )
+            histoFinal.SetBinError(index+1 , 0 )
+        #print ""
+
+    return histoFinal
+
+def GetIntegral(histo):
+    return histo.Integral()
+
+def GetIntegralError(histo):
+    integralError = 0
+    for bin in range( 1 , histo.GetNbinsX()+1 ):
+        integralError = integralError + (histoFinal.GetBinError(bin)*histoFinal.GetBinError(bin))
+    integralError = sqrt(integralError)
+    return integralError
+        
 # %%%%%%% END %%%%%%% 
 
                 
 #--- Define all the histograms
 
 ## Eta histograms
-name_ele_eta_gen_all = "ele_Eta_Gen_etaCut"
-h_ele_eta_gen_all = GetHisto( name_ele_eta_gen_all , File1)
-name_ele_eta_gen_ID_ISO = "ele_Eta_Gen_matched_ID_ISO"
-h_ele_eta_gen_ID_ISO = GetHisto( name_ele_eta_gen_ID_ISO , File1)
+h_ele_eta_gen_all = GetHisto( "ele_Eta_Gen_etaCut" , File1)
+h_ele_eta_gen_ID_ISO = GetHisto( "ele_Eta_Gen_matched_ID_ISO" , File1)
 
-name_muon_eta_gen_all = "muon_Eta_Gen_etaCut"
-h_muon_eta_gen_all = GetHisto( name_muon_eta_gen_all , File2)
-name_muon_eta_gen_ID_ISO = "muon_Eta_Gen_matched_ID_ISO"
-h_muon_eta_gen_ID_ISO = GetHisto( name_muon_eta_gen_ID_ISO , File2)
+h_muon_eta_gen_all = GetHisto( "muon_Eta_Gen_etaCut" , File2)
+h_muon_eta_gen_ID_ISO = GetHisto( "muon_Eta_Gen_matched_ID_ISO" , File2)
 
 ## Pt histograms
-name_ele_pt_gen_all = "ele_Pt_Gen_etaCut"
-h_ele_pt_gen_all = GetHisto( name_ele_pt_gen_all , File1)
-name_ele_pt_gen_ID_ISO = "ele_Pt_Gen_matched_ID_ISO"
-h_ele_pt_gen_ID_ISO = GetHisto( name_ele_pt_gen_ID_ISO , File1)
+h_ele_pt_gen_all = GetHisto( "ele_Pt_Gen_etaCut" , File1)
+h_ele_pt_gen_ID_ISO = GetHisto( "ele_Pt_Gen_matched_ID_ISO" , File1)
 
-name_muon_pt_gen_all = "muon_Pt_Gen_etaCut"
-h_muon_pt_gen_all = GetHisto( name_muon_pt_gen_all , File2)
-name_muon_pt_gen_ID_ISO = "muon_Pt_Gen_matched_ID_ISO"
-h_muon_pt_gen_ID_ISO = GetHisto( name_muon_pt_gen_ID_ISO , File2)
+h_muon_pt_gen_all = GetHisto( "muon_Pt_Gen_etaCut" , File2)
+h_muon_pt_gen_ID_ISO = GetHisto( "muon_Pt_Gen_matched_ID_ISO" , File2)
 
+## Pt histograms to be rescaled
+h_ptmuon_allcuts = GetHisto( "histo1D__TTBAR__cutHisto_allCuts________________Pt1stMuIDISO_DIS" , File3 )
 
 #--- Calculate Efficiency
 
@@ -246,17 +323,27 @@ eff_muon_eta_gen_ID_ISO = GetEffFixBinning( h_muon_eta_gen_ID_ISO , h_muon_eta_g
                                      , "muon \\eta_{gen}" , "reconstruction efficiency"
                                      , -2.5 , 2.5)
 
+############################
+#variable binning
+#LQ 250
+#MyBins = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210,
+#          220, 230, 240, 250,
+#          300, 350, 400, 450, 500, 550, 600, 1000]
+#Z+jets
+MyBins = [30, 40, 50, 60, 70, 80, 90, 100, 120, 140, 160, 180, 200, 250, 300, 400]
+############################
+
 eff_ele_pt_gen_ID_ISO = GetEffVarBinning( h_ele_pt_gen_ID_ISO , h_ele_pt_gen_all
                                           , 0.9 , 20 , 1
                                           , "electron pT_{gen} (GeV)" , "reconstruction efficiency"
                                           , 0 , 1000
-                                          , 25,10 , 7,50 , 1,400)
+                                          , MyBins)
 
 eff_muon_pt_gen_ID_ISO = GetEffVarBinning( h_muon_pt_gen_ID_ISO , h_muon_pt_gen_all
                                            , 0.9 , 20 , 1
                                            , "muon pT_{gen} (GeV)" , "reconstruction efficiency"
                                            , 0 , 1000
-                                           , 25,10 , 7,50 , 1,400)
+                                           , MyBins)
 
 ##Variable bins
 #LQ 250 --> (N_points,step): 25,10 , 7,50 , 1,400
@@ -273,6 +360,13 @@ ratioEff_pt_gen_ID_ISO = GetRatioEff( eff_ele_pt_gen_ID_ISO , eff_muon_pt_gen_ID
                                       , 0.9 , 20 , 1
                                       , "electron/muon pT_{gen} (GeV)"
                                       , "efficiency ratio - \\varepsilon_{ele}/\\varepsilon_{muon}")
+
+#--- Rescale histogram with ratio of efficiency
+
+h_ptmuon_allcuts_rescaled = GetHistoRescaled( h_ptmuon_allcuts , ratioEff_pt_gen_ID_ISO )
+
+print "integral = " + str( GetIntegral(h_ptmuon_allcuts_rescaled) )
+print "error = " + str( GetIntegralError(h_ptmuon_allcuts_rescaled) )
 
 #--- Final plots
 
@@ -309,6 +403,9 @@ c6.SetGridy();
 c6.SetGridx();
 ratioEff_pt_gen_ID_ISO.Draw("ap")
 
+## pT muon rescaled by Ratio Eff
+c7 = TCanvas()
+h_ptmuon_allcuts_rescaled.Draw()
 
 ## Terminate the program
 print "Press ENTER to terminate"
